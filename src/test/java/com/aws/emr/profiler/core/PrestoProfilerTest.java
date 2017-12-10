@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.aws.emr.profiler.core;
 
 import org.testng.annotations.Test;
 
-public class ProfilerTest {
-
-    @Test(expectedExceptions = RuntimeException.class)
+public class PrestoProfilerTest {
+    @Test(expectedExceptions = NotImplementedException.class)
     public void firstTest() {
-        Profiler p = new Profiler();
+        Profiler p = new PrestoProfiler();
         p.profile();
     }
 }
