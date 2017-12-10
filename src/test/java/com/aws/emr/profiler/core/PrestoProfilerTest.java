@@ -16,6 +16,12 @@
 
 package com.aws.emr.profiler.core;
 
-public interface Profiler {
-     void profile();
+import org.testng.annotations.Test;
+
+public class PrestoProfilerTest {
+    @Test(expectedExceptions = NotImplementedException.class)
+    public void notImplementedTest() {
+        Profiler p = new PrestoProfiler();
+        p.profile();
+    }
 }

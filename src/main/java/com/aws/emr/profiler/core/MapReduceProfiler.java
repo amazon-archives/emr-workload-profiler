@@ -16,6 +16,9 @@
 
 package com.aws.emr.profiler.core;
 
-public interface Profiler {
-     void profile();
+public class MapReduceProfiler implements Profiler {
+    @Override
+    public void profile() {
+        throw new NotImplementedException();
+    }
 }

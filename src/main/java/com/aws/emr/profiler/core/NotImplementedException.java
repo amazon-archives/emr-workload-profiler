@@ -16,6 +16,5 @@
 
 package com.aws.emr.profiler.core;
 
-public interface Profiler {
-     void profile();
+public class NotImplementedException extends RuntimeException {
 }

@@ -16,6 +16,12 @@
 
 package com.aws.emr.profiler.core;
 
-public interface Profiler {
-     void profile();
+import org.testng.annotations.Test;
+
+public class MapReduceProfilerTest {
+    @Test(expectedExceptions = NotImplementedException.class)
+    public void notImplementedTest() {
+        Profiler p = new MapReduceProfiler();
+        p.profile();
+    }
 }
