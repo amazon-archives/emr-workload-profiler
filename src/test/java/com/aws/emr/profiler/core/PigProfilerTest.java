@@ -16,6 +16,12 @@
 
 package com.aws.emr.profiler.core;
 
-public interface Profiler {
-    void profile();
+import org.testng.annotations.Test;
+
+public class PigProfilerTest {
+    @Test(expectedExceptions = NotImplementedException.class)
+    public void firstTest() {
+        Profiler p = new PigProfiler();
+        p.profile();
+    }
 }
