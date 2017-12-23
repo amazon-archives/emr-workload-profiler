@@ -1,0 +1,4 @@
+{
+  "s3Bucket": "workload-metrics",
+  "enabledProfilers": ["SparkProfiler"]
+}
