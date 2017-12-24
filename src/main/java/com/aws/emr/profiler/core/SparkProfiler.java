@@ -16,9 +16,35 @@
 
 package com.aws.emr.profiler.core;
 
+import com.aws.emr.profiler.cli.Config;
+import com.aws.emr.profiler.core.metricscollector.MetricsCollector;
+import com.aws.emr.profiler.core.metricscollector.SparkMetricsCollector;
+import com.aws.emr.profiler.core.persister.Persister;
+import com.aws.emr.profiler.core.persister.S3Persister;
+
+import java.time.Instant;
+
 public class SparkProfiler implements Profiler {
+
+    private static String FILE_NAME_FORMAT = "emr-profiler-spark-metrics-%tQ";
+
+    private MetricsCollector sparkMetricsCollector;
+    private Persister s3MetricsPersister;
+
+    public SparkProfiler(Config config) {
+        this.sparkMetricsCollector = new SparkMetricsCollector();
+        this.s3MetricsPersister = new S3Persister(config.getS3Bucket());
+    }
+
+    public SparkProfiler(MetricsCollector sparkMetricsCollector, Persister s3MetricsPersister) {
+        this.sparkMetricsCollector = sparkMetricsCollector;
+        this.s3MetricsPersister = s3MetricsPersister;
+    }
+
     @Override
     public void profile() {
-        throw new NotImplementedException();
+        String metrics = sparkMetricsCollector.getSerializedMetrics();
+        String fileName = String.format(FILE_NAME_FORMAT, Instant.now().toEpochMilli());
+        s3MetricsPersister.saveMetrics(fileName, metrics);
     }
 }
