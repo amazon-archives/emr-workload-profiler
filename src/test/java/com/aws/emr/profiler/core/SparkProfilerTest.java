@@ -16,12 +16,41 @@
 
 package com.aws.emr.profiler.core;
 
+import com.aws.emr.profiler.core.metricscollector.MetricsCollector;
+import com.aws.emr.profiler.core.metricscollector.SparkMetricsCollector;
+import com.aws.emr.profiler.core.persister.Persister;
+import com.aws.emr.profiler.core.persister.S3Persister;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 public class SparkProfilerTest {
-    @Test(expectedExceptions = NotImplementedException.class)
-    public void firstTest() {
-        Profiler p = new SparkProfiler();
-        p.profile();
+
+    private MetricsCollector sparkMetricsCollector;
+    private Persister s3Persister;
+    private Profiler sparkProfiler;
+
+    @BeforeMethod
+    public void setUp() {
+        s3Persister = mock(S3Persister.class);
+        sparkMetricsCollector = mock(SparkMetricsCollector.class);
+        sparkProfiler = new SparkProfiler(sparkMetricsCollector, s3Persister);
+    }
+
+    @Test
+    public void collectMetricsValid() {
+        when(sparkMetricsCollector.getSerializedMetrics()).thenReturn(SparkTestData.serializedSparkApplicationData);
+        doNothing().when(s3Persister).saveMetrics(any(), any());
+
+        sparkProfiler.profile();
+
+        verify(sparkMetricsCollector, times(1)).getSerializedMetrics();
+        verify(s3Persister, times(1)).saveMetrics(any(), any());
     }
 }
