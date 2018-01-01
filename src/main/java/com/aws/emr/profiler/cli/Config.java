@@ -16,6 +16,13 @@
 
 package com.aws.emr.profiler.cli;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.log4j.Log4j;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -23,26 +30,11 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.log4j.Logger;
-
-@Data
 @Builder
+@Data
+@Log4j
 public class Config {
-    private static Logger LOG = Logger.getLogger(Config.class);
-
-    @Getter
-    @Setter
     private String s3Bucket;
-
-    @Getter
-    @Setter
     private List<String> enabledProfilers;
 
     public static Optional<Config> parseConfig(String configPath)  {
@@ -51,7 +43,7 @@ public class Config {
             Gson serializer = new GsonBuilder().create();
             return Optional.of(tryParseConfig(configFile, serializer));
         } catch (Exception ex) {
-            LOG.error(ex);
+            log.error(ex);
             return Optional.empty();
         }
     }
