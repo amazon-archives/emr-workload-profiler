@@ -28,23 +28,23 @@ public class SparkProfiler implements Profiler {
 
     private static String FILE_NAME_FORMAT = "emr-profiler-spark-metrics-%tQ";
 
-    private MetricsCollector sparkMetricsCollector;
-    private Persister s3MetricsPersister;
+    private MetricsCollector metricsCollector;
+    private Persister metricsPersister;
 
     public SparkProfiler(Config config) {
-        this.sparkMetricsCollector = new SparkMetricsCollector();
-        this.s3MetricsPersister = new S3Persister(config.getS3Bucket());
+        this.metricsCollector = new SparkMetricsCollector();
+        this.metricsPersister = new S3Persister(config.getS3Bucket());
     }
 
-    public SparkProfiler(MetricsCollector sparkMetricsCollector, Persister s3MetricsPersister) {
-        this.sparkMetricsCollector = sparkMetricsCollector;
-        this.s3MetricsPersister = s3MetricsPersister;
+    public SparkProfiler(MetricsCollector metricsCollector, Persister metricsPersister) {
+        this.metricsCollector = metricsCollector;
+        this.metricsPersister = metricsPersister;
     }
 
     @Override
     public void profile() {
-        String metrics = sparkMetricsCollector.getSerializedMetrics();
+        String metrics = metricsCollector.getSerializedMetrics();
         String fileName = String.format(FILE_NAME_FORMAT, Instant.now().toEpochMilli());
-        s3MetricsPersister.saveMetrics(fileName, metrics);
+        metricsPersister.saveMetrics(fileName, metrics);
     }
 }

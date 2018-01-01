@@ -17,22 +17,22 @@
 package com.aws.emr.profiler.cli;
 
 import com.aws.emr.profiler.core.Profiler;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 
 import java.util.List;
 
+@Log4j
 public class Main {
     private static String DEFAULT_CONFIG_PATH = System.getProperty("user.home") + "/.emr-profiler/config.json";
-    private static Logger LOG = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        LOG.info("Parsing config");
-        Config c = Config.parseConfig(DEFAULT_CONFIG_PATH).orElseThrow(InvalidConfigFileException::new);
+        log.info("Parsing config");
+        Config config = Config.parseConfig(DEFAULT_CONFIG_PATH).orElseThrow(InvalidConfigFileException::new);
 
-        LOG.info("Creating profilers");
-        List<Profiler> profilers = ProfilerFactory.createProfilers(c);
+        log.info("Creating profilers");
+        List<Profiler> profilers = ProfilerFactory.createProfilers(config);
 
-        LOG.info("Running profilers");
+        log.info("Running profilers");
         profilers.parallelStream().forEach(p -> p.profile());
     }
 }

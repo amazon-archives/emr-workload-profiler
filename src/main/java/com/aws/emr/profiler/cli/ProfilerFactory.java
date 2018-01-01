@@ -17,25 +17,30 @@
 package com.aws.emr.profiler.cli;
 
 import com.aws.emr.profiler.core.Profiler;
+import lombok.extern.log4j.Log4j;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Log4j
 public class ProfilerFactory {
-    private static String DEFAULT_PROFILER_CLASS ="com.aws.emr.profiler.core.";
+    private static String DEFAULT_PROFILER_PACKAGE ="com.aws.emr.profiler.core.";
 
-    public static List<Profiler> createProfilers(Config c) throws Exception {
-        return c.getEnabledProfilers().parallelStream().map(p -> createProfiler(c, p)).filter(p -> p.isPresent())
-                .map(p -> p.get()).collect(Collectors.toList());
+    public static List<Profiler> createProfilers(Config config) throws Exception {
+        return config.getEnabledProfilers().parallelStream()
+                .map(profiler -> createProfiler(config, profiler))
+                .filter(profiler -> profiler.isPresent())
+                .map(profiler -> profiler.get()).collect(Collectors.toList());
     }
 
-    private static Optional<Profiler> createProfiler(Config c, String profilerClassName) {
+    private static Optional<Profiler> createProfiler(Config config, String profilerClassName) {
         try {
-            Class profilerClass = Class.forName(DEFAULT_PROFILER_CLASS + profilerClassName);
-            Profiler p =  (Profiler) profilerClass.getConstructor(Config.class).newInstance(c);
-            return Optional.of(p);
+            Class profilerClass = Class.forName(DEFAULT_PROFILER_PACKAGE + profilerClassName);
+            Profiler profiler =  (Profiler) profilerClass.getConstructor(Config.class).newInstance(config);
+            return Optional.of(profiler);
         } catch (Exception ex) {
+            log.error(ex);
             return Optional.empty();
         }
     }

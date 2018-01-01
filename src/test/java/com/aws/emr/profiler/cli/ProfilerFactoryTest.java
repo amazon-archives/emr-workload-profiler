@@ -16,12 +16,11 @@
 
 package com.aws.emr.profiler.cli;
 
-import java.util.List;
-
 import com.aws.emr.profiler.core.Profiler;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 

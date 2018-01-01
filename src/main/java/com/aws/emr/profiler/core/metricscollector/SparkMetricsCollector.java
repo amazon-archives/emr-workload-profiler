@@ -17,7 +17,6 @@
 package com.aws.emr.profiler.core.metricscollector;
 
 import com.aws.emr.profiler.core.requestprocessor.HTTPRequestProcessor;
-import com.google.gson.Gson;
 
 public class SparkMetricsCollector implements MetricsCollector {
 
